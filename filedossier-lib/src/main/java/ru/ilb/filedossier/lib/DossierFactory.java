@@ -44,11 +44,20 @@ public class DossierFactory {
         List<DossierModelFile> modelFiles = dossierModel.getDossierModelFiles();
         
         List<DossierFile> dossierFiles = new ArrayList<>();
-        modelFiles.forEach((modelFile) -> {
+        modelFiles.forEach((modelFile, store) -> {
+        	boolean exist;
+        	
+        	try {
+        		byte[] test = store.getContents(dossierModel.getName());
+        		exist = true;
+        	}catch(IOException e) {
+        		exist = false;
+        	}
+        	
             dossierFiles.add(new DossierFileImpl(
                     store, modelFile.getCode(), modelFile.getName(),
                     modelFile.getRequired(), modelFile.getReadonly(),
-                    modelFile.getVisible()
+                    modelFile.getVisible(), exist
             ));
         });
         return new DossierImpl(code, name, dossierFiles);
