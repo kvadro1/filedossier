@@ -46,7 +46,8 @@ public class DossierImpl implements Dossier {
     public DossierImpl(String code, String name, List<DossierFile> dossierFiles) {
         this.code = code;
         this.name = name;
-        this.dossierFiles = dossierFiles.stream().collect(Collectors.toMap(df -> df.getCode(), df -> df));
+        this.dossierFiles = dossierFiles.stream().peek(df->df.setParent(this))
+                .collect(Collectors.toMap(df -> df.getCode(), df -> df));
     }
 
     @Override
