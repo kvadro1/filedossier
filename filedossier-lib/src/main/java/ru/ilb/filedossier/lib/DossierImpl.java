@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import ru.ilb.filedossier.entities.DossierPath;
 
 /**
  *
@@ -29,6 +30,8 @@ import java.util.stream.Collectors;
  */
 public class DossierImpl implements Dossier {
 
+    private Dossier parent;
+    
     private Map<String, DossierFile> dossierFiles = new LinkedHashMap<>();
 
     private final String code;
@@ -73,6 +76,21 @@ public class DossierImpl implements Dossier {
             throw new DossierFileNotFoundException(fileCode);
         }
         return file;
+    }
+    @Override
+    public Dossier getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(DossierPath parent) {
+        assert Dossier.class.isAssignableFrom(parent.getClass()) : "Dossier instance should be passed as argument instead of " + parent.getClass().getCanonicalName();
+        this.parent = (Dossier) parent;
+    }
+
+    @Override
+    public String getExtension() {
+        return null;
     }
 
 }
