@@ -1,9 +1,7 @@
-/filedossier-lib/nbproject/
-/filedossier-model/target/
+/filedossier-ddl/target/
 /filedossier-api/target/
 /filedossier-components/target/
-/filedossier-lib/target/
-/filedossier-model/nbproject/
+/filedossier-ddl/nbproject/
 /filedossier-store/target/
 /filedossier-context/target/
 /filedossier-scripting/target/
@@ -20,3 +18,4 @@
 /filedossier-context/nbproject/
 /filedossier-core/nbproject/
 /filedossier-core/target/
+/filedossier-ddl/target/
