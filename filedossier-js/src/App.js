@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import FileDossier from './FileDossier';
+import FileDossier from './FileDossier2';
+import Example from './Example';
 import './App.css';
 
 class App extends Component {
@@ -8,6 +9,7 @@ class App extends Component {
         return (
                 <div className="app">
                     <FileDossier dossierKey="123" dossierPackage="testmodel" dossierCode="TEST"/>
+                    <Example/>
                 </div>
                 );
     }
