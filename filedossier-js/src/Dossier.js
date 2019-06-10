@@ -1,17 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { Table, Button } from 'semantic-ui-react'
 
-function Dossier( { dossierKey, dossierPackage, dossierCode }) {
-    const [dossier, setDossier] = useState(null);
+//const DossierContainer = props => {
+//  return (
+//    <Suspense fallback={'Loading...'}>
+//      <Dossier  {//...props} />
+//    </Suspense>//
+//  );
+//};
 
+
+function useDossier(props) {
+  const [dossier, setDossier] = useState(null);
+  const { dossierKey, dossierPackage, dossierCode } = props;
+    
+  const getDossier = async function () {
+        const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '.json'); // Uses dossierId prop
+        const json = await response.json();
+        setDossier(json);
+  };
+
+  return { dossier, actions: { getDossier } };
+}
+
+function Dossier({ dossierKey, dossierPackage, dossierCode }) {
+    const { dossier, actions } = useDossier({ dossierKey, dossierPackage, dossierCode })
 
     useEffect(() => {
-        async function fetchData() {
-            const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '.json'); // Uses dossierId prop
-            const json = await response.json();
-            setDossier(json);
-        }
-        fetchData();
+        actions.getDossier();
     }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
 
 
@@ -29,7 +45,7 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
                                                 </Table.Header>
 
                                                 <Table.Body>
-                                                    {dossier.dossierFile.map((file) => <DossierFile file={file} key={file.code}/> )}
+                                                    {dossier.dossierFile.map((file) => <DossierFile file={file} key={file.code} actions={actions}/> )}
                                                 </Table.Body>
                                             </Table>
                         }
@@ -45,10 +61,11 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
     //return <div>1111</div>;
 }
 
-function DossierFile( { file: { code, name } }) {
+function DossierFile( { file: { code, name }, actions }) {
 
     const remove = () => {
         console.log('code', code);
+        actions.getDossier();
     };
 
 
