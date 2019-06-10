@@ -27,14 +27,13 @@
             <artifactId>jaxb-api</artifactId>
             <version>${javax-xml-bind-jaxb-api.version}</version>
         </dependency> 
-        <!-- dependency for <representation mediaType="multipart/form-data" />  
+        <!-- dependency for <representation mediaType="multipart/form-data" />  -->
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxrs</artifactId>
             <version>${apache-cxf.version}</version>
-            <scope>compile</scope>
         </dependency>        
-        -->
+        
         
         <dependency>
             <groupId>javax</groupId>
