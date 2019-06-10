@@ -20,14 +20,14 @@ function useDossier(props) {
         setDossier(json);
   };
 
-  return { dossier, actions: { getDossier } };
+  return { dossier, resource: { getDossier } };
 }
 
 function Dossier({ dossierKey, dossierPackage, dossierCode }) {
-    const { dossier, actions } = useDossier({ dossierKey, dossierPackage, dossierCode })
+    const { dossier, resource } = useDossier({ dossierKey, dossierPackage, dossierCode })
 
     useEffect(() => {
-        actions.getDossier();
+        resource.getDossier();
     }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
 
 
@@ -45,7 +45,7 @@ function Dossier({ dossierKey, dossierPackage, dossierCode }) {
                                                 </Table.Header>
 
                                                 <Table.Body>
-                                                    {dossier.dossierFile.map((file) => <DossierFile file={file} key={file.code} actions={actions}/> )}
+                                                    {dossier.dossierFile.map((file) => <DossierFile file={file} key={file.code} resource={resource}/> )}
                                                 </Table.Body>
                                             </Table>
                         }
@@ -61,11 +61,11 @@ function Dossier({ dossierKey, dossierPackage, dossierCode }) {
     //return <div>1111</div>;
 }
 
-function DossierFile( { file: { code, name }, actions }) {
+function DossierFile( { file: { code, name }, resource }) {
 
     const remove = () => {
         console.log('code', code);
-        actions.getDossier();
+        resource.getDossier();
     };
 
 
