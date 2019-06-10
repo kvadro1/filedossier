@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Table, Button } from 'semantic-ui-react'
 
-function FileDossier( { dossierKey, dossierPackage, dossierCode }) {
+function Dossier( { dossierKey, dossierPackage, dossierCode }) {
     const [dossier, setDossier] = useState(null);
 
 
@@ -29,7 +29,7 @@ function FileDossier( { dossierKey, dossierPackage, dossierCode }) {
                                                 </Table.Header>
 
                                                 <Table.Body>
-                                                    {dossier.dossierFile.map((file) => <FileDossierFile file={file} key={file.code}/> )}
+                                                    {dossier.dossierFile.map((file) => <DossierFile file={file} key={file.code}/> )}
                                                 </Table.Body>
                                             </Table>
                         }
@@ -45,7 +45,7 @@ function FileDossier( { dossierKey, dossierPackage, dossierCode }) {
     //return <div>1111</div>;
 }
 
-function FileDossierFile( { file: { code, name } }) {
+function DossierFile( { file: { code, name } }) {
 
     const remove = () => {
         console.log('code', code);
@@ -59,4 +59,4 @@ function FileDossierFile( { file: { code, name } }) {
                                                     </Table.Row>;
 }
 
-export default FileDossier;
+export default Dossier;

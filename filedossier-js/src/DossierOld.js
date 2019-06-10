@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ApiClient, DefaultApi } from './openapi/src';
 import { Table, Button } from 'semantic-ui-react'
 
-        class FileDossier extends Component {
+        class Dossier extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -96,4 +96,4 @@ import { Table, Button } from 'semantic-ui-react'
     }
 }
 
-export default FileDossier;
+export default Dossier;
