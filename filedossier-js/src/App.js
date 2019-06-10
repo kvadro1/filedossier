@@ -7,8 +7,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 function Index() {
     return (<div className="app">
-        <Dossier dossierKey="123" dossierPackage="testmodel" dossierCode="TEST"/>
-        <Example/>
+    <Link to="/dossiers/123/testmodel/TEST">TEST DOSSIER</Link>
+    <Link to="/dossiers/123/testmodel/TEST2">TEST DOSSIER2</Link>
     </div>
             );
 }
@@ -16,6 +16,7 @@ function Index() {
 function DossierIndex({ match }) {
     console.log(match.params);
     return (<div className="app">
+        <Index/>
             <Dossier dossierKey={match.params.dossierKey} dossierPackage={match.params.dossierPackage} dossierCode={match.params.dossierCode}/>
     </div>
             );
