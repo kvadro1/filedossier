@@ -13,9 +13,10 @@ function Index() {
             );
 }
 
-function Activity(props) {
-    console.log(props.match.params);
+function DossierIndex({ match }) {
+    console.log(match.params);
     return (<div className="app">
+            <Dossier dossierKey={match.params.dossierKey} dossierPackage={match.params.dossierPackage} dossierCode={match.params.dossierCode}/>
     </div>
             );
 }
@@ -27,7 +28,7 @@ class App extends Component {
                 <Router>
                     <div>
                         <Route path="/" exact component={Index} />
-                        <Route path="/processes/:processId/activities/:activityId" component={Activity} />
+                        <Route path="/dossiers/:dossierKey/:dossierPackage/:dossierCode" component={DossierIndex} />
                     </div>
                 </Router>
                 );
