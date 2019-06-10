@@ -29,10 +29,7 @@ function FileDossier( { dossierKey, dossierPackage, dossierCode }) {
                                                 </Table.Header>
 
                                                 <Table.Body>
-                                                    {dossier.dossierFile.map((file, index) => <Table.Row key={index}>
-                                                        <Table.Cell>{file.name}</Table.Cell>
-                                                        <Table.Cell><Button content="Удалить"/></Table.Cell>
-                                                    </Table.Row>)}
+                                                    {dossier.dossierFile.map((file) => <FileDossierFile file={file} key={file.code}/> )}
                                                 </Table.Body>
                                             </Table>
                         }
@@ -46,6 +43,20 @@ function FileDossier( { dossierKey, dossierPackage, dossierCode }) {
 
 
     //return <div>1111</div>;
+}
+
+function FileDossierFile( { file: { code, name } }) {
+
+    const remove = () => {
+        console.log('code', code);
+    };
+
+
+
+    return <Table.Row>
+                                                        <Table.Cell>{name}</Table.Cell>
+                                                        <Table.Cell><Button content="Удалить" onClick={remove}/></Table.Cell>
+                                                    </Table.Row>;
 }
 
 export default FileDossier;
