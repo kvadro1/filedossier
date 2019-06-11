@@ -1,18 +1,13 @@
 import React, { Suspense, useState, useEffect, useRef } from 'react';
 import { Table, Button } from 'semantic-ui-react'
 
-//const DossierContainer = props => {
-//  return (
-//    <Suspense fallback={'Loading...'}>
-//      <Dossier  {//...props} />
-//    </Suspense>//
-//  );
-//};
 
 
         function useDossier(props) {
             const [dossier, setDossier] = useState(null);
             const {dossierKey, dossierPackage, dossierCode} = props;
+
+
 
             const getDossier = async function () {
                 const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '.json'); // Uses dossierId prop
@@ -28,17 +23,15 @@ import { Table, Button } from 'semantic-ui-react'
                         });
             };
 
+            useEffect(() => {
+                getDossier();
+            }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
 
             return {dossier, resource: {getDossier, setContents}};
         }
 
 function Dossier( { dossierKey, dossierPackage, dossierCode }) {
     const {dossier, resource} = useDossier({dossierKey, dossierPackage, dossierCode})
-
-    useEffect(() => {
-        resource.getDossier();
-    }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
-
 
     return (
             <div className="fileDosser">
