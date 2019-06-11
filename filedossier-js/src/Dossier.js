@@ -1,34 +1,32 @@
 import React, { Suspense, useState, useEffect, useRef } from 'react';
-import { Table, Button } from 'semantic-ui-react'
+import { Table, Button } from 'semantic-ui-react';
 
 
 
-        function useDossier(props) {
-            const [dossier, setDossier] = useState(null);
-            const {dossierKey, dossierPackage, dossierCode} = props;
+function useDossier(props) {
+    const [dossier, setDossier] = useState(null);
+    const {dossierKey, dossierPackage, dossierCode} = props;
 
+    const getDossier = async function () {
+        const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '.json'); // Uses dossierId prop
+        const json = await response.json();
+        setDossier(json);
+    };
 
+    const setContents = async function (fileCode, formData) {
+        const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '/dossierfiles/' + fileCode,
+                {
+                    method: 'POST',
+                    body: formData
+                });
+    };
 
-            const getDossier = async function () {
-                const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '.json'); // Uses dossierId prop
-                const json = await response.json();
-                setDossier(json);
-            };
+    useEffect(() => {
+        getDossier();
+    }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
 
-            const setContents = async function (fileCode, formData) {
-                const response = await fetch('/filedossier-web/web/dossiers/' + dossierKey + '/' + dossierPackage + '/' + dossierCode + '/dossierfiles/' + fileCode,
-                        {
-                            method: 'POST',
-                            body: formData
-                        });
-            };
-
-            useEffect(() => {
-                getDossier();
-            }, [dossierKey, dossierPackage, dossierCode]); // Or [] if effect doesn't need props or state
-
-            return {dossier, resource: {getDossier, setContents}};
-        }
+    return {dossier, resource: {getDossier, setContents}};
+}
 
 function Dossier( { dossierKey, dossierPackage, dossierCode }) {
     const {dossier, resource} = useDossier({dossierKey, dossierPackage, dossierCode})
