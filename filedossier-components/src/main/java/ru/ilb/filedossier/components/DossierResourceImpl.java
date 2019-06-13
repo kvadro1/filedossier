@@ -72,10 +72,8 @@ public class DossierResourceImpl implements DossierResource {
         }
     }
 
-    @POST
-    @Consumes("multipart/form-data")
-    @Path("/dossierfiles/{fileCode}")
-    public void uploadContents(@PathParam("fileCode") String fileCode, MultipartBody body) {
+    @Override
+    public void uploadContents(String fileCode, MultipartBody body) {
         this.dossier.getDossierFile(fileCode).setContents(body.getRootAttachment().getObject(byte[].class));
     }
 
