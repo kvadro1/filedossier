@@ -1,13 +1,22 @@
 import React, { Suspense, useState, useEffect, useRef } from 'react';
-import { Table, Button,Message,Loader } from 'semantic-ui-react';
+import { Table, Button, Message, Loader } from 'semantic-ui-react';
 import {dossierApi} from './Config';
+import DossierResource from './DossierResource';
 import {useResource} from './ReactHelper';
 
-
 function Dossier( { dossierKey, dossierPackage, dossierCode }) {
+    const dossierResource = new DossierResource(dossierApi, {dossierKey, dossierPackage, dossierCode});
 
-    const [dossier, resource] = useResource(dossierApi, "getDossier", [dossierKey, dossierPackage, dossierCode]);
-    console.log('dossier', dossier);
+    const [dossier, getDossier] = useResource(function () {
+        console.log('Dossier.useResource');
+        return dossierResource.getDossier();
+    });
+
+    useEffect(function () {
+        console.log('Dossier.useEffect');
+        getDossier();
+    }, [dossierKey, dossierPackage, dossierCode]);
+
     return (
             <div className="fileDosser">
                 {dossier.loading && <Loader active /> }
@@ -24,7 +33,7 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
                                         </Table.Header>
 
                                         <Table.Body>
-                                            {dossier.value.dossierFile.map((file) => <DossierFile file={file} key={file.code} resource={resource}/>)}
+                                            {dossier.value.dossierFile.map((file) => <DossierFile file={file} key={file.code} />)}
                                         </Table.Body>
                                     </Table>
                     }
@@ -59,11 +68,11 @@ function DossierFile( { file: { code, name }, resource }) {
 
 
     return <Table.Row>
-        <Table.Cell>{name}</Table.Cell>
-        <Table.Cell><Button content="Удалить" onClick={remove}/>
-            <input ref={inputFileEl} type='file' onChange={upload}  />
-        </Table.Cell>
-    </Table.Row>;
+    <Table.Cell>{name}</Table.Cell>
+    <Table.Cell><Button content="Удалить" onClick={remove}/>
+        <input ref={inputFileEl} type='file' onChange={upload}  />
+    </Table.Cell>
+</Table.Row>;
 }
 
 export default Dossier;
