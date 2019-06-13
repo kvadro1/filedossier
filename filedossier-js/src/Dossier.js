@@ -9,7 +9,7 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
 
     const [dossier, getDossier] = useResource(() => dossierResource.getDossier());
 
-    useEffect(() => {getDossier()} , [dossierKey, dossierPackage, dossierCode]);
+    useEffect(() => {getDossier();} , [dossierKey, dossierPackage, dossierCode]);
 
     return (
             <div className="fileDosser">
@@ -39,7 +39,7 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
 
 function DossierFile( { file: { code, name }, onChange, resource }) {
 
-    const inputFileEl = useRef(null)
+    const inputFileEl = useRef(null);
 
     const remove = () => {
         console.log('code', code);
@@ -47,16 +47,16 @@ function DossierFile( { file: { code, name }, onChange, resource }) {
     };
 
     const upload = () => {
-        console.log('code', code, inputFileEl.current.files);
+        //console.log('upload', code, inputFileEl.current.files);
         const files = inputFileEl.current.files;
 
-        const formData = new FormData();
+//        const formData = new FormData();
+//
+//        for (var i = 0; i < files.length; i++) {
+//            formData.append(i, files.item(i));
+//        }
 
-        for (var i = 0; i < files.length; i++) {
-            formData.append(i, files.item(i));
-        }
-
-        resource.setContents(code, formData);
+        resource.uploadContents(inputFileEl.current.files[0]);
         onChange();
     };
 
@@ -64,7 +64,7 @@ function DossierFile( { file: { code, name }, onChange, resource }) {
     return <Table.Row>
     <Table.Cell>{name}</Table.Cell>
     <Table.Cell><Button content="Удалить" onClick={remove}/>
-        <input ref={inputFileEl} type='file' onChange={upload}  />
+        <input ref={inputFileEl} type="file" name="file" onChange={upload}  />
     </Table.Cell>
 </Table.Row>;
 }

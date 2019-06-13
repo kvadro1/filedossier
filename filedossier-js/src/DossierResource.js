@@ -34,4 +34,8 @@ export class DossierFileResource {
         this.fileCode = fileCode;
     }
 
+    uploadContents(file) {
+        return this.dossierApi.uploadContents(this.fileCode,this.dossierKey, this.dossierPackage, this.dossierCode,{file});
+    }
+
 }
