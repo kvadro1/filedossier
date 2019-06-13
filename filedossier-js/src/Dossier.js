@@ -7,15 +7,9 @@ import {useResource} from './ReactHelper';
 function Dossier( { dossierKey, dossierPackage, dossierCode }) {
     const dossierResource = new DossierResource(dossierApi, {dossierKey, dossierPackage, dossierCode});
 
-    const [dossier, getDossier] = useResource(function () {
-        console.log('Dossier.useResource');
-        return dossierResource.getDossier();
-    });
+    const [dossier, getDossier] = useResource(() => dossierResource.getDossier());
 
-    useEffect(function () {
-        console.log('Dossier.useEffect');
-        getDossier();
-    }, [dossierKey, dossierPackage, dossierCode]);
+    useEffect(() => {getDossier()} , [dossierKey, dossierPackage, dossierCode]);
 
     return (
             <div className="fileDosser">
@@ -33,7 +27,7 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
                                         </Table.Header>
 
                                         <Table.Body>
-                                            {dossier.value.dossierFile.map((file) => <DossierFile file={file} key={file.code} />)}
+                                            {dossier.value.dossierFile.map((file) => <DossierFile file={file} key={file.code} onChange={getDossier} resource={dossierResource.getDossierFileResource(file.code)}/>)}
                                         </Table.Body>
                                     </Table>
                     }
@@ -43,13 +37,13 @@ function Dossier( { dossierKey, dossierPackage, dossierCode }) {
             );
 }
 
-function DossierFile( { file: { code, name }, resource }) {
+function DossierFile( { file: { code, name }, onChange, resource }) {
 
     const inputFileEl = useRef(null)
 
     const remove = () => {
         console.log('code', code);
-        resource.getDossier();
+        onChange();
     };
 
     const upload = () => {
@@ -63,7 +57,7 @@ function DossierFile( { file: { code, name }, resource }) {
         }
 
         resource.setContents(code, formData);
-        resource.getDossier();
+        onChange();
     };
 
 
