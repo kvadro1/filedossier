@@ -15,14 +15,10 @@
  */
 package ru.ilb.filedossier.components;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import javax.ws.rs.core.Response;
+import ru.ilb.filedossier.api.DossierFileResource;
 import ru.ilb.filedossier.api.DossierResource;
 import ru.ilb.filedossier.core.DossierFactory;
-import ru.ilb.filedossier.entities.Representation;
+import ru.ilb.filedossier.entities.DossierFile;
 import ru.ilb.filedossier.mappers.DossierMapper;
 import ru.ilb.filedossier.view.DossierView;
 
@@ -51,31 +47,11 @@ public class DossierResourceImpl implements DossierResource {
         return dossierMapper.fromModel(dossier);
     }
 
-    @Override
-    public Response getContents(String fileCode) {
-        Representation representation = this.dossier.getDossierFile(fileCode).getRepresentation();
-        return Response.ok(representation.getContents())
-                .header("Content-Type", representation.getMediaType())
-                .header("Content-Disposition", "attachment; filename=" + representation.getFileName()).build();
-
-    }
 
     @Override
-    public void setContents(String fileCode, InputStream inputstream) {
-        try {
-            this.dossier.getDossierFile(fileCode).setContents(Util.toByteArray(inputstream));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @Override
-    public void uploadContents(String fileCode, File file) {
-        try {
-            this.dossier.getDossierFile(fileCode).setContents(Files.readAllBytes(file.toPath()));
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+    public DossierFileResource getDossierFileResource(String fileCode) {
+        DossierFile dossierFile = this.dossier.getDossierFile(fileCode);
+        return new DossierFileResourceImpl(dossierFile);
     }
 
 }
