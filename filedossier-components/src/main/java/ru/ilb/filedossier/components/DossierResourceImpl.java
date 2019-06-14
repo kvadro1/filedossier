@@ -15,17 +15,14 @@
  */
 package ru.ilb.filedossier.components;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.nio.file.Files;
 import javax.ws.rs.core.Response;
-import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import ru.ilb.filedossier.api.DossierResource;
-import ru.ilb.filedossier.entities.Representation;
 import ru.ilb.filedossier.core.DossierFactory;
+import ru.ilb.filedossier.entities.Representation;
 import ru.ilb.filedossier.mappers.DossierMapper;
 import ru.ilb.filedossier.view.DossierView;
 
@@ -73,8 +70,12 @@ public class DossierResourceImpl implements DossierResource {
     }
 
     @Override
-    public void uploadContents(String fileCode, MultipartBody body) {
-        this.dossier.getDossierFile(fileCode).setContents(body.getRootAttachment().getObject(byte[].class));
+    public void uploadContents(String fileCode, File file) {
+        try {
+            this.dossier.getDossierFile(fileCode).setContents(Files.readAllBytes(file.toPath()));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
 }

@@ -52,8 +52,8 @@
                 <method name="POST" id="uploadContents">
                     <doc>store dossier file contents</doc>
                     <request>
-                        <representation mediaType="multipart/form-data" >
-                            <doc>file data</doc>
+                        <representation mediaType="multipart/form-data">
+                            <param style="query" name="file" type="java.io.File" />
                         </representation>
                     </request>
                     <response status="204"></response>

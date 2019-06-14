@@ -122,6 +122,11 @@
                 </executions>
                 <dependencies>
                     <dependency>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                        <version>1.2.3</version>
+                    </dependency>
+                    <dependency>
                         <groupId>org.jvnet.jaxb2_commons</groupId>
                         <artifactId>jaxb2-basics</artifactId>
                         <version>0.9.4</version>
@@ -176,6 +181,7 @@
                             </resourcePackages>
                             <prettyPrint>true</prettyPrint>
                             <filterClass>ru.ilb.common.openapi.generator.OpenAPISpecFilterImpl</filterClass>
+                            <modelConverterClasses>ru.ilb.common.openapi.generator.ModelConverterImpl</modelConverterClasses>
                             <objectMapperProcessorClass>ru.ilb.common.openapi.generator.ObjectMapperProcessorImpl</objectMapperProcessorClass>
                         </configuration>
                         <executions>
