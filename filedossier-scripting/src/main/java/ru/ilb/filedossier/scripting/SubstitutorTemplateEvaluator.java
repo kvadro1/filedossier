@@ -17,7 +17,7 @@ package ru.ilb.filedossier.scripting;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.naming.InitialContext;
+import javax.naming.Context;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.StringLookup;
 import org.apache.commons.text.lookup.StringLookupFactory;
@@ -32,10 +32,10 @@ import ru.ilb.filedossier.scripting.lookup.LookupPerformer;
  */
 public class SubstitutorTemplateEvaluator implements TemplateEvaluator {
 
-    private InitialContext context;
+    private Context context;
     private List<StringLookup> lookups;
 
-    public SubstitutorTemplateEvaluator(InitialContext context) {
+    public SubstitutorTemplateEvaluator(Context context) {
 	this.context = context;
 	lookups = new ArrayList<>();
 	lookups.add(new JNDILookup(context));
