@@ -17,6 +17,7 @@ package ru.ilb.filedossier.scripting;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.naming.Context;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.StringLookup;
@@ -42,14 +43,14 @@ public class SubstitutorTemplateEvaluator implements TemplateEvaluator {
     }
 
     @Override
-    public String evaluateStringExpression(String template, DossierContext dossierContext) {
-	lookups.add(StringLookupFactory.INSTANCE.mapStringLookup(dossierContext.asMap()));
+    public String evaluateStringExpression(String template,  Map<String, Object> dossierContext) {
+	lookups.add(StringLookupFactory.INSTANCE.mapStringLookup(dossierContext));
 	StringSubstitutor sub = new StringSubstitutor(new LookupPerformer(lookups));
 	return sub.replace(template);
     }
 
     @Override
-    public Boolean evaluateBooleanExpression(String template, DossierContext dossierContext) {
+    public Boolean evaluateBooleanExpression(String template,  Map<String, Object> dossierContext) {
 	return Boolean.valueOf(evaluateStringExpression(template, dossierContext));
     }
 }
