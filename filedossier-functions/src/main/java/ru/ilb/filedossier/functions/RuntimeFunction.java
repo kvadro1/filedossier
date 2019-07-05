@@ -15,15 +15,19 @@
  */
 package ru.ilb.filedossier.functions;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.misc.IOUtils;
 
 /**
  *
@@ -42,7 +46,6 @@ public class RuntimeFunction implements ByteFunction {
     @Override
     public byte[] apply(byte[] t) {
 
-        ProcessBuilder pb = new ProcessBuilder(Arrays.asList(commandUri.toString(), new String(t)));
         File commandFile = Paths.get(commandUri.getPath()).toFile();
         if (!commandFile.exists()) {
             throw new IllegalArgumentException(commandFile.toString() + " does not exists");
@@ -51,16 +54,44 @@ public class RuntimeFunction implements ByteFunction {
             throw new IllegalArgumentException(commandFile.toString() + " not executable");
         }
 
-        pb.directory(commandFile.getParentFile());
+        ProcessBuilder pb = new ProcessBuilder(commandFile.toString());
         byte[] output = null;
         try {
             p = pb.start();
 
-            OutputStream os = p.getOutputStream();
-            output = ((ByteArrayOutputStream) os).toByteArray();
-            os.close();
+            OutputStream stdin = p.getOutputStream();
+            stdin.write(t);
+            stdin.close();
 
-        } catch (IOException ex) {
+            InputStream stdout = p.getInputStream();
+            //output = new byte[5];
+            //byte[] anotherOutput = new byte[stdout.available()];
+            //stdout.read(anotherOutput);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            int nRead;
+            byte[] data = new byte[1024];
+            while ((nRead = stdout.read(data, 0, data.length)) != -1) {
+                if (nRead < data.length) {
+                    nRead--;
+                }
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+            output = buffer.toByteArray();
+            stdout.close();
+
+            int exitCode = p.waitFor();
+            switch (exitCode) {
+                case 127:
+                    throw new IllegalArgumentException(commandFile.toString() +" does not exist");
+                case 0:
+                    break;
+                default:
+                    throw new RuntimeException("Wrong command exit code");
+            }
+
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(RuntimeFunction.class.getName()).log(Level.SEVERE, null, ex);
         }
 

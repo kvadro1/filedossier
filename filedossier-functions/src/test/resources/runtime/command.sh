@@ -1,3 +1,3 @@
 #!/bin/sh
-
-echo '{"test":"123"}'
+read a
+echo $a
