@@ -22,9 +22,11 @@ import java.util.List;
  * @author SPoket
  */
 public interface Dossier extends DossierPath {
-    
+
     public DossierFile getDossierFile(String fileCode);
 
     public List<DossierFile> getDossierFiles();
+
+    public String getContextKey();
 
 }
