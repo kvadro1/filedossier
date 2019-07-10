@@ -36,29 +36,29 @@ import ru.ilb.filedossier.entities.Store;
  */
 public class DossierFileImpl implements DossierFile {
 
-    private Dossier parent;
+    protected Dossier parent;
 
-    private final Store store;
+    protected Store store;
 
-    private final String code;
+    protected final String code;
 
-    private final String name;
+    protected final String name;
 
-    private final boolean required;
+    protected final boolean required;
 
-    private final boolean readonly;
+    protected final boolean readonly;
 
-    private final boolean hidden;
+    protected final boolean hidden;
 
-    private final String mediaType;
+    protected final String mediaType;
 
-    private final String extension;
+    protected final String extension;
 
-    private final Map<String, Representation> representationsMap;
+    protected final Map<String, Representation> representationsMap;
 
-    private final Representation representation;
+    protected final Representation representation;
 
-    private final DossierContextService dossierContextService;
+    protected final DossierContextService dossierContextService;
 
     public DossierFileImpl(Store store, String code, String name, boolean required, boolean readonly, boolean hidden,
 	    String mediaType, List<Representation> representations, DossierContextService dossierContextService) {
@@ -88,12 +88,8 @@ public class DossierFileImpl implements DossierFile {
 	return name;
     }
 
-    private String getStoreFileName() {
+    protected String getStoreFileName() {
 	return extension == null ? code : code + "." + extension;
-    }
-
-    private String getNestedStoreFileName(String nestedCode) {
-	return extension == null ? code : code + nestedCode + "." + extension;
     }
 
     @Override
