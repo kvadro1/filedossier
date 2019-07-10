@@ -57,6 +57,10 @@ public class DossierFileResourceImpl implements DossierFileResource {
     @Override
     public void uploadContents(File file) {
 	try {
+	    String mimeType = Files.probeContentType(file.toPath());
+	    if (mimeType != null && mimeType.contains("image/")) {
+		dossierFile.setMultipage();
+	    }
 	    dossierFile.setContents(Files.readAllBytes(file.toPath()));
 	} catch (IOException ex) {
 	    throw new RuntimeException(ex);
@@ -65,7 +69,7 @@ public class DossierFileResourceImpl implements DossierFileResource {
 
     @Override
     public DossierContextResource getDossierContextResource() {
-        DossierContextResourceImpl resource = new DossierContextResourceImpl(dossierFile);
-        return resourceContext.initResource(resource);
+	DossierContextResourceImpl resource = new DossierContextResourceImpl(dossierFile);
+	return resourceContext.initResource(resource);
     }
 }

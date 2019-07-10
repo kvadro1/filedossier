@@ -174,4 +174,9 @@ public class DossierFileImpl implements DossierFile {
 	dossierContextService.setContext(parent.getContextKey(), dossierContext);
     }
 
+    @Override
+    public void setMultipage() {
+	// not supported
+    }
+
 }
