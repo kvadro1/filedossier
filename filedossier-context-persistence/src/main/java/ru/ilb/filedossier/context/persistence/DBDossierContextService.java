@@ -49,7 +49,11 @@ public class DBDossierContextService implements DossierContextService {
     @Override
     public void putContext(String contextKey, DossierContext context) throws DbActionExecutionException {
 	DossierContextPersistence contextPersistence = new DossierContextPersistence(contextKey, context.asMap());
-	repository.save(contextPersistence);
+	try {
+	    repository.save(contextPersistence);
+	} catch (DbActionExecutionException e) {
+	    mergeContext(contextKey, context);
+	}
     }
 
     @Override

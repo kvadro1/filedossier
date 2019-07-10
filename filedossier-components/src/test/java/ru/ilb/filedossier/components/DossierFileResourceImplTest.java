@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 slavb.
+ * Copyright 2019 kuznetsov_me.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,10 @@ import javax.inject.Inject;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.json.basic.JsonMapObject;
 import org.apache.cxf.jaxrs.provider.json.JsonMapObjectProvider;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.ilb.filedossier.api.DossierContextResource;
@@ -36,11 +36,11 @@ import ru.ilb.filedossier.view.DossierView;
 
 /**
  *
- * @author slavb
+ * @author kuznetsov_me
  */
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
-public class DossiersResourceImplTest {
+public class DossierFileResourceImplTest {
 
     private DossiersResource resource;
 
@@ -49,9 +49,6 @@ public class DossiersResourceImplTest {
 
     @Inject
     private JsonMapObjectProvider jsonMapObjectProvider;
-
-    public DossiersResourceImplTest() {
-    }
 
     private DossiersResource getDossiersResource() {
 	if (resource == null) {
@@ -65,30 +62,19 @@ public class DossiersResourceImplTest {
 
     }
 
+    private DossierFileResource getDossierFileResource() {
+	return getDossiersResource().getDossierResource("teststorekey", "testmodel", "TEST")
+		.getDossierFileResource("jurnals");
+    }
+
     /**
      * Test of getDossierResource method, of class DossiersResourceImpl.
      */
     @org.junit.Test
-    public void testGetDossierResource() {
-	String dossierKey = "teststorekey";
-	String dossierPackage = "testmodel";
-	String dossierCode = "TEST";
-	DossierResource dossierResource = getDossiersResource().getDossierResource(dossierKey, dossierPackage,
-		dossierCode);
-	DossierView dossier = dossierResource.getDossier();
-	assertNotNull(dossier);
-	DossierFileResource dossierFileResource = dossierResource.getDossierFileResource("fairpricecalc");
-	String res = dossierFileResource.getContents().readEntity(String.class);
-
-	DossierContextResource dossierContextResource = dossierFileResource.getDossierContextResource();
-
-	JsonMapObject context = dossierContextResource.getContext();
-
-	JsonMapObject inputContext = new JsonMapObject();
-	inputContext.setProperty("test", "123");
-	dossierContextResource.setContext(inputContext);
-	JsonMapObject result = dossierContextResource.getContext();
-	assertEquals(result, inputContext);
+    public void testUploadContents() throws URISyntaxException {
+	DossierFileResource fileResource = getDossierFileResource();
+	fileResource.uploadContents(Paths.get(getClass().getClassLoader().getResource("page.jpeg").toURI()).toFile());
+	fileResource.uploadContents(Paths.get(getClass().getClassLoader().getResource("page.jpeg").toURI()).toFile());
     }
 
 }

@@ -35,6 +35,7 @@ public class PdfDossierFile extends DossierFileImpl {
     public PdfDossierFile(Store store, String code, String name, boolean required, boolean readonly, boolean hidden,
 	    String mediaType, List<Representation> representations, DossierContextService dossierContextService) {
 	super(store, code, name, required, readonly, hidden, mediaType, representations, dossierContextService);
+	this.context = dossierContextService.getContext(code);
     }
 
     @Override
@@ -51,12 +52,11 @@ public class PdfDossierFile extends DossierFileImpl {
     }
 
     private void setMultipageContents(byte[] data) {
-	context = getDossierContext();
-	int page = context.asMap().size() + 1;
+	int page = Integer.valueOf((String) context.asMap().getOrDefault("pages", "0"));
 	try {
-	    store.setContents(Integer.toString(page), data);
-	    context.setProperty("pages", page);
-	    dossierContextService.putContext(getStoreFileName(), context);
+	    store.setContents(Integer.toString(page++), data);
+	    context.setProperty("pages", page++);
+	    dossierContextService.putContext(code, context);
 	} catch (IOException ex) {
 	    throw new RuntimeException(ex);
 	}
@@ -64,15 +64,16 @@ public class PdfDossierFile extends DossierFileImpl {
 
     @Override
     public DossierContext getDossierContext() {
-	if (this.context == null) {
-	    this.context = dossierContextService.getContext(code);
-	}
-	return this.context;
+	return context;
     }
 
     @Override
     public byte[] getContents() {
-	return super.getContents();
+	try {
+	    return store.getContents(getStoreFileName());
+	} catch (IOException ex) {
+	    throw new FileNotExistsException(getStoreFileName());
+	}
     }
 
     @Override
