@@ -28,19 +28,17 @@ import ru.ilb.filedossier.entities.Store;
  */
 public class PdfDossierFile extends DossierFileImpl {
 
-    private DossierContext context;
-
     private boolean multipage = false;
 
     public PdfDossierFile(Store store, String code, String name, boolean required, boolean readonly, boolean hidden,
 	    String mediaType, List<Representation> representations, DossierContextService dossierContextService) {
 	super(store, code, name, required, readonly, hidden, mediaType, representations, dossierContextService);
-	this.context = dossierContextService.getContext(code);
 	this.representation.setParent(this);
     }
 
     @Override
     public void setContents(byte[] data) {
+	getDossierContext();
 	if (multipage) {
 	    setMultipageContents(data);
 	} else {
@@ -57,17 +55,13 @@ public class PdfDossierFile extends DossierFileImpl {
 	try {
 	    store.setContents(Integer.toString(page++), data);
 	    context.setProperty("pages", page++);
-	    dossierContextService.putContext(code, context);
+	    dossierContextService.putContext(getContextCode(), context);
 	} catch (IOException ex) {
 	    throw new RuntimeException(ex);
 	}
     }
 
-    @Override
-    public DossierContext getDossierContext() {
-	return context;
-    }
-
+    // TODO: multipage return
     @Override
     public byte[] getContents() {
 	try {

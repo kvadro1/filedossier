@@ -25,6 +25,8 @@ import ru.ilb.filedossier.context.persistence.repositories.DossierContextReposit
 import ru.ilb.filedossier.entities.DossierContext;
 import ru.ilb.filedossier.context.DossierContextService;
 
+// TODO: create idMap
+
 @Named
 public class DBDossierContextService implements DossierContextService {
 

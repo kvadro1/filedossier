@@ -36,6 +36,8 @@ import ru.ilb.filedossier.entities.Store;
  */
 public class DossierFileImpl implements DossierFile {
 
+    protected DossierContext context;
+
     protected Dossier parent;
 
     protected Store store;
@@ -162,17 +164,24 @@ public class DossierFileImpl implements DossierFile {
 
     @Override
     public DossierContext getDossierContext() {
-	return dossierContextService.getContext(parent.getContextKey());
+	if (this.context == null) {
+	    this.context = dossierContextService.getContext(getContextCode());
+	}
+	return this.context;
     }
 
     @Override
     public void setDossierContext(DossierContext dossierContext) {
-	dossierContextService.setContext(parent.getContextKey(), dossierContext);
+	dossierContextService.setContext(getContextCode(), dossierContext);
     }
 
     @Override
     public void setMultipage() {
 	// not supported
+    }
+
+    protected String getContextCode() {
+	return parent.getCode() + "/" + code;
     }
 
 }
