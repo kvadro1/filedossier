@@ -19,20 +19,16 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import javax.inject.Inject;
+import javax.ws.rs.core.Response;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
-import org.apache.cxf.jaxrs.json.basic.JsonMapObject;
 import org.apache.cxf.jaxrs.provider.json.JsonMapObjectProvider;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Assert;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.test.context.junit4.SpringRunner;
-import ru.ilb.filedossier.api.DossierContextResource;
 import ru.ilb.filedossier.api.DossierFileResource;
-import ru.ilb.filedossier.api.DossierResource;
 import ru.ilb.filedossier.api.DossiersResource;
-import ru.ilb.filedossier.view.DossierView;
 
 /**
  *
@@ -62,9 +58,9 @@ public class DossierFileResourceImplTest {
 
     }
 
-    private DossierFileResource getDossierFileResource() {
+    private DossierFileResource getDossierFileResource(String name) {
 	return getDossiersResource().getDossierResource("teststorekey", "testmodel", "TEST")
-		.getDossierFileResource("jurnals");
+		.getDossierFileResource(name);
     }
 
     /**
@@ -72,9 +68,20 @@ public class DossierFileResourceImplTest {
      */
     @org.junit.Test
     public void testUploadContents() throws URISyntaxException {
-	DossierFileResource fileResource = getDossierFileResource();
+	DossierFileResource fileResource = getDossierFileResource("jurnals");
 	fileResource.uploadContents(Paths.get(getClass().getClassLoader().getResource("page.jpeg").toURI()).toFile());
 	fileResource.uploadContents(Paths.get(getClass().getClassLoader().getResource("page.jpeg").toURI()).toFile());
+    }
+
+    @org.junit.Test
+    public void testGetContents() {
+	DossierFileResource fileResource = getDossierFileResource("jurnals");
+	Response response = fileResource.getContents();
+	Assert.assertEquals("application/pdf", response.getMediaType().toString());
+
+	fileResource = getDossierFileResource("fairpricecalc");
+	response = fileResource.getContents();
+	Assert.assertEquals("application/vnd.oasis.opendocument.spreadsheet", response.getMediaType().toString());
     }
 
 }
