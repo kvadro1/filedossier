@@ -42,7 +42,6 @@ public class DossierFileResourceImpl implements DossierFileResource {
 	Representation representation = dossierFile.getRepresentation();
 	return Response.ok(representation.getContents()).header("Content-Type", representation.getMediaType())
 		.header("Content-Disposition", "attachment; filename=" + representation.getFileName()).build();
-
     }
 
     @Override

@@ -36,6 +36,7 @@ public class PdfDossierFile extends DossierFileImpl {
 	    String mediaType, List<Representation> representations, DossierContextService dossierContextService) {
 	super(store, code, name, required, readonly, hidden, mediaType, representations, dossierContextService);
 	this.context = dossierContextService.getContext(code);
+	this.representation.setParent(this);
     }
 
     @Override
