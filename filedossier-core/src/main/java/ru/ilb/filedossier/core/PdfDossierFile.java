@@ -15,9 +15,10 @@
  */
 package ru.ilb.filedossier.core;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
-import ru.ilb.filedossier.entities.DossierContext;
 import ru.ilb.filedossier.context.DossierContextService;
 import ru.ilb.filedossier.entities.Representation;
 import ru.ilb.filedossier.entities.Store;
@@ -37,16 +38,20 @@ public class PdfDossierFile extends DossierFileImpl {
     }
 
     @Override
-    public void setContents(byte[] data) {
+    public void setContents(File contentsFile) {
 	getDossierContext();
-	if (multipage) {
-	    setMultipageContents(data);
-	} else {
-	    try {
-		store.setContents(getStoreFileName(), data);
-	    } catch (IOException ex) {
-		throw new RuntimeException(ex);
+	try {
+	    String mimeType = Files.probeContentType(contentsFile.toPath());
+	    byte[] data = Files.readAllBytes(contentsFile.toPath());
+
+	    if (mimeType != null && mimeType.contains("image/")) {
+		setMultipage();
+		setMultipageContents(data);
+	    } else {
+		setContents(data);
 	    }
+	} catch (IOException ex) {
+	    throw new RuntimeException(ex);
 	}
     }
 
@@ -71,8 +76,7 @@ public class PdfDossierFile extends DossierFileImpl {
 	}
     }
 
-    @Override
-    public void setMultipage() {
+    private void setMultipage() {
 	store = store.getNestedFileStore(code);
 	multipage = true;
     }

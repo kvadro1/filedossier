@@ -15,6 +15,8 @@
  */
 package ru.ilb.filedossier.entities;
 
+import java.io.File;
+
 /**
  * Dossier file
  * 
@@ -70,8 +72,5 @@ public interface DossierFile extends DossierContents {
      */
     public void setDossierContext(DossierContext dossierContext);
 
-    /**
-     * set DossierFile work mode to multipage
-     */
-    public void setMultipage();
+    public void setContents(File file);
 }

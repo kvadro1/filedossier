@@ -15,11 +15,16 @@
  */
 package ru.ilb.filedossier.core;
 
+import java.io.File;
 import ru.ilb.filedossier.entities.DossierFile;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import ru.ilb.filedossier.entities.Dossier;
 import ru.ilb.filedossier.entities.DossierContext;
@@ -175,13 +180,17 @@ public class DossierFileImpl implements DossierFile {
 	dossierContextService.setContext(getContextCode(), dossierContext);
     }
 
-    @Override
-    public void setMultipage() {
-	// not supported
-    }
-
     protected String getContextCode() {
 	return parent.getCode() + "/" + code;
+    }
+
+    @Override
+    public void setContents(File contentsFile) {
+	try {
+	    setContents(Files.readAllBytes(contentsFile.toPath()));
+	} catch (IOException ex) {
+	    throw new RuntimeException(ex);
+	}
     }
 
 }
